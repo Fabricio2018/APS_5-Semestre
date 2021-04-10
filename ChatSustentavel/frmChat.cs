@@ -110,7 +110,7 @@ namespace ChatSustentavel
         public void EnviaMensagem()
         {
             if (txbMensagem.Lines.Length >= 1)
-            {   //escreve a mensagem da caixa de texto
+            {   
                 stwEnviador.WriteLine(txbMensagem.Text);
                 stwEnviador.Flush();
                 txbMensagem.Lines = null;
@@ -136,4 +136,3 @@ namespace ChatSustentavel
         }
     }
 }
-/*Atualizado*/

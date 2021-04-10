@@ -97,7 +97,7 @@ namespace ChatSustentavel
             this.txbMensagem.Name = "txbMensagem";
             this.txbMensagem.Size = new System.Drawing.Size(281, 20);
             this.txbMensagem.TabIndex = 6;
-            this.txbMensagem.TextChanged += new System.EventHandler(this.txbMensagem_TextChanged);
+            this.txbMensagem.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txbMensagem_KeyPress);
             // 
             // btnEnviar
             // 
