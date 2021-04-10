@@ -97,6 +97,7 @@ namespace ChatSustentavel
             this.txbMensagem.Name = "txbMensagem";
             this.txbMensagem.Size = new System.Drawing.Size(281, 20);
             this.txbMensagem.TabIndex = 6;
+            this.txbMensagem.TextChanged += new System.EventHandler(this.txbMensagem_TextChanged);
             // 
             // btnEnviar
             // 
@@ -106,6 +107,7 @@ namespace ChatSustentavel
             this.btnEnviar.TabIndex = 7;
             this.btnEnviar.Text = "Enviar";
             this.btnEnviar.UseVisualStyleBackColor = true;
+            this.btnEnviar.Click += new System.EventHandler(this.btnEnviar_Click);
             // 
             // frmChat
             // 

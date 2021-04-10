@@ -18,7 +18,6 @@ namespace ChatSustentavel
     {
         public frmChat()
         {
-            InitializeComponent();
             public string NomeUsuario = "";
             public StreamWriter stwEnviador;
             public StreamReader strReceptor;
@@ -31,7 +30,7 @@ namespace ChatSustentavel
             public IPAddress enderecoIP;
             public bool Conectado;
 
-        private void btnConectar_Click(object sender, EventArgs e)
+        public void btnConectar_Click(object sender, EventArgs e)
         {
             if (Conectado == false)
             {
@@ -39,11 +38,11 @@ namespace ChatSustentavel
             }
             else
             {
-               
+                FechaConexao("Desconectado a pedido do usuário");
             }
         }
 
-        private void InicializaConexao()
+        public void InicializaConexao()
         {
             enderecoIP = IPAddress.Parse(txbIpServidor.Text);
             tcpServidor = new TcpClient();
@@ -66,7 +65,7 @@ namespace ChatSustentavel
             mensagemThread = new Thread(new ThreadStart(RecebeMensagens));
             mensagemThread.Start();
         }
-        private void RecebeMensagens()
+        public void RecebeMensagens()
         {
             strReceptor = new StreamReader(tcpServidor.GetStream());
             string ConResposta = strReceptor.ReadLine();
@@ -75,6 +74,65 @@ namespace ChatSustentavel
             {
                 this.Invoke(new AtualizaLogCallBack(this.AtualizaLog), new object[] { "Conectado com sucesso!" });
             }
+            
+            else
+            {
+                string Motivo = "Não Conectado: ";
+                Motivo += ConResposta.Substring(2, ConResposta.Length -2);
+                this.Invoke(new FechaConexaoCallBack(this.FechaConexao), new object[] { "Motivo" });
+                return;
+            }
+
+            while (Conectado)
+            {
+                this.Invoke(new AtualizaLogCallBack(this.AtualizaLog), new object[] { strReceptor.ReadLine() });              
+            }
+        }
+
+        public void AtualizaLog(string strMensagem)
+        {
+            txbChat.AppendText(strMensagem + "\r\n");
+        }
+
+        public void btnEnviar_Click(object sender, EventArgs e)
+        {
+            EnviaMensagem();
+        }
+
+        public void txbMensagem_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                EnviaMensagem();
+            }
+        }
+
+        public void EnviaMensagem()
+        {
+            if (txbMensagem.Lines.Length >= 1)
+            {   //escreve a mensagem da caixa de texto
+                stwEnviador.WriteLine(txbMensagem.Text);
+                stwEnviador.Flush();
+                txbMensagem.Lines = null;
+            }
+            txbMensagem.Text = "";
+        }
+        public void FechaConexao(string Motivo)
+        {
+         
+            txbChat.AppendText(Motivo + "\r\n");
+           
+            txbIpServidor.Enabled = true;
+            txbUsuario.Enabled = true;
+            txbMensagem.Enabled = false;
+            btnEnviar.Enabled = false;
+            btnConectar.Text = "Conectado!";
+
+           
+            Conectado = false;
+            stwEnviador.Close();
+            strReceptor.Close();
+            tcpServidor.Close();
         }
     }
 }
